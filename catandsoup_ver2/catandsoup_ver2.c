@@ -3,9 +3,11 @@
 #include <Windows.h>
 #include <time.h>
 
-#define ROOM_WIDTH 10
+#define ROOM_WIDTH 15
 #define HME_POS 1
 #define BWL_POS (ROOM_WIDTH - 2)
+#define CAT_TOWER 5
+#define SCRATCHER 10
 
 int Intimacy = 2, soup = 0, yaongPos = HME_POS, prvCatPos = HME_POS;
 int cp = 0, feelings = 3;
@@ -103,6 +105,10 @@ void drewRoom() {
 			printf("H");
 		else if (i == BWL_POS)
 			printf("B");
+		/*else if (i == CAT_TOWER)
+			printf("T");
+		else if (i == SCRATCHER)
+			printf("S");*/
 		else if (i == 0)
 			printf("#");
 		else if (i == ROOM_WIDTH - 1)
@@ -138,12 +144,11 @@ int rollDice() {
 void feel() {
 	int dice = rollDice();
 	printf("주사위 눈이 %d이하이면 그냥 기분이 나빠집니다.\n", 6 - Intimacy);
-	if (dice < 6 - Intimacy) {
-		printf("%d가 나왔습니다\n", dice);
-		if (feelings > 0) {
-			feelings--;
-			printf("%s의기분이 나빠집니다: %d -> %d\n", catName,feelings + 1,feelings);
-		}
+	printf("주사위를 굴립니다. 또르르...\n");
+	printf("%d가 나왔습니다\n", dice);
+	if (dice < 6 - Intimacy && feelings > 0) {
+		feelings--;
+		printf("%s의 기분이 나빠집니다: %d -> %d\n", catName, feelings + 1, feelings);
 	}
 }
 
