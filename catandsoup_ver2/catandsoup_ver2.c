@@ -8,10 +8,12 @@
 #define BWL_POS (ROOM_WIDTH - 2)
 
 int Intimacy = 2, soup = 0, yaongPos = HME_POS, prvCatPos = HME_POS;
+int cp = 0, feelings = 3;
 char catName[16] = { 0 };
 
 void intro();
 void showState();
+void feel();
 void drewRoom();
 int rollDice();
 void doInteraction();
@@ -25,6 +27,8 @@ int main() {
 	system("cls");
 	while (1) {
 		showState();
+		feel();
+		Sleep(1000);
 		drewRoom();
 		doInteraction();
 		Sleep(500);
@@ -51,6 +55,22 @@ void intro() {
 void showState() {
 	printf("=========현재 상태=========\n");
 	printf("현재까지 만든 수프: %d개\n", soup);
+	//cp 포인트
+	printf("CP: %d 포인트\n", cp);
+	//기분
+	printf("%s이 기분(0 ~ 3): %d\n", catName, feelings);
+	if (feelings == 0) {
+		printf("기분이 매우 나쁩니다.\n");
+	}
+	else if (feelings == 1) {
+		printf("지루해 합니다.\n");
+	}
+	else if (feelings == 2) {
+		printf("식빵을 굽습니다.\n");
+	}
+	else if (feelings == 3) {
+		printf("골골송을 부릅니다.\n");
+	}
 	printf("집사와의 관계(0~4): %d\n", Intimacy);
 	if (Intimacy == 0) {
 		printf("집사를 혐오합니다.\n");
@@ -113,6 +133,18 @@ void drewRoom() {
 
 int rollDice() {
 	return rand() % 6 + 1;
+}
+
+void feel() {
+	int dice = rollDice();
+	printf("주사위 눈이 %d이하이면 그냥 기분이 나빠집니다.\n", 6 - Intimacy);
+	if (dice < 6 - Intimacy) {
+		printf("%d가 나왔습니다\n", dice);
+		if (feelings > 0) {
+			feelings--;
+			printf("%s의기분이 나빠집니다: %d -> %d\n", catName,feelings + 1,feelings);
+		}
+	}
 }
 
 void doInteraction() {
