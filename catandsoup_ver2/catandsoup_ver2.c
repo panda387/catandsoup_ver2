@@ -193,21 +193,51 @@ void doInteraction() {
 		}
 	}
 }
+
+//아 왜 안되 진짜 ㅇㄴ 로ㅓㄴㅇㅁ오ㅕㅑㅐ
 void moveCat() {
-	printf("%s이동: 집사와 친밀할수록 냄비 쪽으로 갈 확률이 높아집니다.\n", catName);
-	printf("주사위 눈이 %d 이상이면 냄비 쪽으로 이동합니다.\n", 6 - Intimacy);
-	printf("주사위를 굴립니다. 또르륵...");
-	int dice = rollDice();
-	printf("%d가 나왔습니다!", dice);
-	int direction = (dice >= 6 - Intimacy) ? 1 : -1;
-	int newpos = yaongPos + direction;
+	prvCatPos = yaongPos; // 이전 위치 저장
 
-	prvCatPos = yaongPos;
+	
+	// 기분 겁나 좋음
+	if (feelings == 3) {
+		if (yaongPos < BWL_POS) yaongPos++;
+	}
+	//그냥 그럴떄
+	else if (feelings == 2) {
+		printf("%s이는 기분 좋게 식빵을 굽고 있습니다.\n", catName);
+	}
+	//아 어렵다
+	else if (feelings == 1) {
+		//여기 기구가 없을 경우 만들기 나중에 
+		int hasTower = (CAT_TOWER > 0 && CAT_TOWER < ROOM_WIDTH - 1);
+		int hasScratcher = (SCRATCHER > 0 && SCRATCHER < ROOM_WIDTH - 1);
+		if (!hasTower && !hasScratcher) {
+			printf("방에 놀이 기구가 없어 %s의 기분이 더 나빠집니다.\n", catName);
+			if (feelings > 0) feelings--;
+		}
+		// 거기 계산 절댓값으로 해보기
+		int distTower = abs(yaongPos - CAT_TOWER);
+		int distScratcher = abs(yaongPos - SCRATCHER);
+		int target;
+		if (distTower < distScratcher) target = CAT_TOWER; 
+		else if (distScratcher < distTower) target = SCRATCHER;
+		else target = (CAT_TOWER < SCRATCHER) ? CAT_TOWER : SCRATCHER; // 둘 다 같으면 더 왼쪽
 
-	if (newpos > 0 && newpos < ROOM_WIDTH - 1)
-		yaongPos = newpos;
-	printf("%s쪽으로 움직입니다\n", (direction == 1 ? "냄비" : "집"));
+		if (yaongPos < target) yaongPos++;
+		else if (yaongPos > target) yaongPos--;
+	}
+	// 기분이 매우 나쁘면 집쪽으로
+	else if (feelings == 0) {
+		if (yaongPos > HME_POS) yaongPos--;
+		printf("기분이 매우 나쁜 %s이는 집으로 갑니다.\n", catName);
+	}
+
+	//맵 밖으로 안나게 하기
+	if (yaongPos < 1) yaongPos = 1;
+	if (yaongPos > ROOM_WIDTH - 2) yaongPos = ROOM_WIDTH - 2;
 }
+
 void makeSuop() {
 	if (yaongPos == BWL_POS) {
 		soup++;
