@@ -10,9 +10,10 @@
 #define SCRATCHER 10
 
 int Intimacy = 2, soup = 0, yaongPos = HME_POS, prvCatPos = HME_POS;
-int cp = 0, feelings = 3;
+int cp = 0, feelings = 3 , lastproduceCP;
 char catName[16] = { 0 };
 
+void produce_CP();
 void intro();
 void showState();
 void feel();
@@ -21,6 +22,7 @@ int rollDice();
 void doInteraction();
 void makeSuop();
 void moveCat();
+void shop();
 
 int main() {
 	srand((unsigned int)time(NULL));
@@ -39,6 +41,10 @@ int main() {
 		makeSuop();
 		Sleep(2500);
 		system("cls");
+		produce_CP();
+		shop();
+		Sleep(2000);
+		system("cls"); 
 	}
 
 	return 0;
@@ -58,7 +64,8 @@ void showState() {
 	printf("=========현재 상태=========\n");
 	printf("현재까지 만든 수프: %d개\n", soup);
 	//cp 포인트
-	printf("CP: %d 포인트\n", cp);
+	printf("%s의 기분과 친밀도에 따라서 CP가 %d 포인트 생산되었습니다.\n", catName, lastproduceCP);
+	printf("CP: %d 포인트\n",cp);
 	//기분
 	printf("%s이 기분(0 ~ 3): %d\n", catName, feelings);
 	if (feelings == 0) {
@@ -255,4 +262,75 @@ void makeSuop() {
 	}
 	if (yaongPos == HME_POS) printf("%s은(는) 자신의 집에서 편안함을 느낍니다.\n", catName);
 
+}
+
+void produce_CP() {
+	int produceCP = (feelings > 0) ? feelings - 1 + Intimacy : 0;
+	lastproduceCP = produceCP;
+	cp += produceCP;
+}
+
+void shop() {
+	int choice;
+	static int hasMouse = 0, hasPoiter = 0 , hasScrater = 0, hasTower = 0;
+	printf("상점에서 물건을 살 수 있습니다.\n");
+	printf("어떤 물건을 구매할까요?\n");
+	//printf("보유 CP 포인트 %d\n", cp);
+	printf("0. 아무것도 사지 않는다.\n");
+	printf("1. 장난감 쥐 : 1CP %s\n ",hasMouse ? "(품절)" : "");
+	printf("2. 레이저 포인터: 2CP %s\n",hasPoiter ? "(품절)" : "");
+	printf("3. 스크래처: 4CP %s \n",hasScrater ? "(품절)" : "");
+	printf("4. 캣 타워: 6CP %s\n",hasTower ? "(품절)" : "");
+	printf(">>");
+	scanf_s("%d", &choice);
+
+	switch (choice)
+	{
+	case 0:
+		break;
+	case 1:
+		if (cp < 1) {
+			printf("CP가 부족합니다.\n");
+		}
+		else {
+			cp -= 1;
+			hasMouse = 1;
+			printf("장난감 쥐를 구매함. 남은 CP: %d\n", cp);
+		}
+		break;
+	case 2:
+		if (cp < 2) {
+			printf("CP가 부족합니다.\n");
+		}
+		else {
+			cp -= 2;
+			hasPoiter = 1;
+			printf("레이저 포인터를 구매함.남은 CP : % d\n", cp);
+		}
+
+		break;
+	case 3:
+		if (cp < 4) {
+			printf("CP가 부족합니다.\n");
+		}
+		else {
+			cp -= 4;
+			hasScrater = 1;
+			printf("스크래쳐를 구매함.남은 CP : % d\n", cp);
+		}
+		break;
+	case 4:
+		if (cp < 6) {
+			printf("CP가 부족합니다.\n");
+		}
+		else {
+			cp -= 6;
+			hasScrater = 1;
+			printf("캣타워를 구매함.남은 CP : % d\n", cp);
+		}
+		break;
+	default:
+		printf("잘못된 입력입니다.\n");
+		
+	}
 }
