@@ -11,8 +11,11 @@
 
 int Intimacy = 2, soup = 0, yaongPos = HME_POS, prvCatPos = HME_POS;
 int cp = 0, feelings = 3 , lastproduceCP;
+int hasMouse = 0, hasPoiter = 0, hasScrater = 0, hasTower = 0;
+int homeStayTurn = 0;
 char catName[16] = { 0 };
 
+void behavior();
 void produce_CP();
 void intro();
 void showState();
@@ -112,10 +115,10 @@ void drewRoom() {
 			printf("H");
 		else if (i == BWL_POS)
 			printf("B");
-		/*else if (i == CAT_TOWER)
+		else if (i == CAT_TOWER)
 			printf("T");
 		else if (i == SCRATCHER)
-			printf("S");*/
+			printf("S");
 		else if (i == 0)
 			printf("#");
 		else if (i == ROOM_WIDTH - 1)
@@ -165,6 +168,8 @@ void doInteraction() {
 		printf("어떤 상호작용을 하시 겠습니까?\n");
 		printf("0.아무것도 하지않음.\n");
 		printf("1.쓰다듬기.\n");
+		if (hasMouse == 1) printf("2.장난감 쥐로 놀아주기\n");
+		if (hasPoiter == 1) printf("3.레이저 포인트로 놀아주기\n");
 		printf(">>");
 		scanf_s("%d", &choice);
 		if (choice == 0) {
@@ -245,6 +250,23 @@ void moveCat() {
 	if (yaongPos > ROOM_WIDTH - 2) yaongPos = ROOM_WIDTH - 2;
 }
 
+void behavior() {
+	if (yaongPos == HME_POS) {
+		homeStayTurn++;
+		if (homeStayTurn >= 1) {
+			feelings++;
+			homeStayTurn = 0;
+		}
+	}
+	else {
+		homeStayTurn = 0;
+		if (yaongPos == SCRATCHER) feelings++;
+		else if (yaongPos == CAT_TOWER) feelings += 2;
+
+	}
+
+}
+
 void makeSuop() {
 	if (yaongPos == BWL_POS) {
 		soup++;
@@ -272,7 +294,8 @@ void produce_CP() {
 
 void shop() {
 	int choice;
-	static int hasMouse = 0, hasPoiter = 0 , hasScrater = 0, hasTower = 0;
+	//실행 되는 동안 값이 유지 되도록 해야됨 근데 왜 안되ㅣㅈ
+	//int hasMouse = 0, hasPoiter = 0 , hasScrater = 0, hasTower = 0;
 	printf("상점에서 물건을 살 수 있습니다.\n");
 	printf("어떤 물건을 구매할까요?\n");
 	//printf("보유 CP 포인트 %d\n", cp);
@@ -289,7 +312,10 @@ void shop() {
 	case 0:
 		break;
 	case 1:
-		if (cp < 1) {
+		if (hasMouse) {
+			printf("이미 장난감 쥐를 구매하였습니다.\n");
+		}
+		else if (cp < 1) {
 			printf("CP가 부족합니다.\n");
 		}
 		else {
@@ -299,7 +325,10 @@ void shop() {
 		}
 		break;
 	case 2:
-		if (cp < 2) {
+		if (hasPoiter) {
+			printf("이미 레이저 포인터를 구매하셨습니다.\n");
+		}
+		else if (cp < 2) {
 			printf("CP가 부족합니다.\n");
 		}
 		else {
@@ -310,7 +339,10 @@ void shop() {
 
 		break;
 	case 3:
-		if (cp < 4) {
+		if (hasScrater) {
+			printf("이미 스크래처를 구매하셨습니다.\n");
+		}
+		else if (cp < 4) {
 			printf("CP가 부족합니다.\n");
 		}
 		else {
@@ -320,17 +352,19 @@ void shop() {
 		}
 		break;
 	case 4:
-		if (cp < 6) {
+		if (hasTower) {
+			printf("이미 스크래처를 구매하셨습니다.\n");
+		}
+		else if (cp < 6) {
 			printf("CP가 부족합니다.\n");
 		}
 		else {
 			cp -= 6;
-			hasScrater = 1;
+			hasTower = 1;
 			printf("캣타워를 구매함.남은 CP : % d\n", cp);
 		}
 		break;
 	default:
 		printf("잘못된 입력입니다.\n");
-		
 	}
 }
