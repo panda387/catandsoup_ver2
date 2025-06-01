@@ -173,13 +173,15 @@ void doInteraction() {
 		printf(">>");
 		scanf_s("%d", &choice);
 		if (choice == 0) {
-			printf("아무것도 하지 않습니다.\n");
-			printf("4/6의 확률로 친밀도가 떨어집니다.\n주사위를 굴립니다. 또르륵...\n");
+			feelings--;
+			printf("아무것도 하지않습니다.\n");
+			printf("%s의 기분이 나빠졌습니다: %d -> %d",catName,feelings+1,feelings);
+			printf("주사위의 눈이 5이하이면 친밀도가 떨어집니다.\n주사위를 굴립니다. 또르륵...\n");
 			int dice = rollDice();
 			printf("%d이(가) 나왔습니다!\n", dice);
-			if (dice <= 4 && Intimacy > 0) {
+			if (dice <= 5 && Intimacy > 0) {
 				Intimacy--;
-				printf("친밀도가 떨어집니다.\n");
+				printf("집사와의 관계가 나빠집니다.\n");
 			}
 			else {
 				printf("다행히 친밀도가 떨어지지 않았습니다.\n");
@@ -188,10 +190,43 @@ void doInteraction() {
 		}
 		else if (choice == 1) {
 			printf("%s의 쓰다듬어 주었습니다.\n", catName);
-			printf("2/6의 확률로 친밀도가 높아집니다.\n주사위를 굴립니다. 또르륵...\n");
+			printf("%s의 기분은 그대로 입니다 : %d\n", catName, feelings);
+			printf("주사위의 눈이 5이상이면 친밀도가 올라갑니다.\n주사위를 굴립니다. 또르륵...\n");
 			int dice = rollDice();
 			printf("%d이(가) 나왔습니다!\n", dice);
 			if (dice >= 5 && Intimacy < 4) {
+				Intimacy++;
+				printf("친밀도가 높아집니다.\n");
+			}
+			else {
+				printf("친밀도는 그대로입니다.\n");
+			}
+			break;
+		}
+		else if(choice == 2){
+			printf("장난감 쥐로 %s와 놀아주었습니다.\n",catName);
+			feelings++;
+			printf("%s의 기분이 조금 좋아졌습니다 : %d -> %d\n", catName, feelings -1, feelings);
+			printf("주사위의 눈이 4이상이면 친밀도가 올라갑니다.\n주사위를 굴립니다. 또르륵...\n");
+			int dice = rollDice();
+			printf("%d이(가) 나왔습니다!\n", dice);
+			if (dice >= 4 && Intimacy < 4) {
+				Intimacy++;
+				printf("친밀도가 높아집니다.\n");
+			}
+			else {
+				printf("친밀도는 그대로입니다.\n");
+			}
+			break;
+		}
+		else if (choice == 3) {
+			printf("레이저 포인터로 %s와 놀아주었습니다.\n", catName);
+			feelings += 2;
+			printf("%s의 기분이 꽤 좋아졌습니다 : %d -> %d\n", catName, feelings - 2, feelings);
+			printf("주사위의 눈이 2이상이면 친밀도가 올라갑니다.\n주사위를 굴립니다. 또르륵...\n");
+			int dice = rollDice();
+			printf("%d이(가) 나왔습니다!\n", dice);
+			if (dice >= 2 && Intimacy < 4) {
 				Intimacy++;
 				printf("친밀도가 높아집니다.\n");
 			}
