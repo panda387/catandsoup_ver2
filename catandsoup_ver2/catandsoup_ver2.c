@@ -12,7 +12,7 @@
 int Intimacy = 2, soup = 0, yaongPos = HME_POS, prvCatPos = HME_POS;
 int cp = 0, feelings = 3 , lastproduceCP;
 int hasMouse = 0, hasPoiter = 0, hasScrater = 0, hasTower = 0;
-int homeStayTurn = 0;
+int homeStayTurn = 0, countTurn = 0;
 char catName[16] = { 0 };
 
 void behavior();
@@ -26,6 +26,7 @@ void doInteraction();
 void makeSuop();
 void moveCat();
 void shop();
+void min_game();
 
 int main() {
 	srand((unsigned int)time(NULL));
@@ -33,6 +34,7 @@ int main() {
 	Sleep(1000);
 	system("cls");
 	while (1) {
+		countTurn++;
 		showState();
 		feel();
 		Sleep(1000);
@@ -48,6 +50,11 @@ int main() {
 		shop();
 		Sleep(2000);
 		system("cls"); 
+		if (countTurn % 3 == 0) {
+			min_game();
+			Sleep(2000);
+			system("cls");
+		}
 	}
 
 	return 0;
@@ -402,4 +409,29 @@ void shop() {
 	default:
 		printf("잘못된 입력입니다.\n");
 	}
+}
+
+void min_game() {
+	int num1, num2, answer, userInput;
+
+	printf("==========================\n");
+	printf("랜덤 미니 게임.\n");
+	printf("두 숫자의 곱을 맞춰보세요!\n");
+	printf("==========================\n");
+
+	num1 = rand() % 10 + 1; // 1부터 10까지의 랜덤 숫자
+	num2 = rand() % 10 + 1; 
+	answer = num1 * num2;
+
+	printf("%d x %d = ?\n", num1, num2);
+	printf("정답을 입력하세요: ");
+	scanf_s("%d", &userInput);
+	if (userInput == answer) {
+		printf("정답입니다! %d x %d = %d\n", num1, num2, answer);
+		feelings++;
+		printf("고양이의 기분이 1 좋아 집니다 %d -> %d", feelings - 1, feelings);
+	} else {
+		printf("틀렸습니다. 정답은 %d입니다.\n", answer);
+	}
+
 }
