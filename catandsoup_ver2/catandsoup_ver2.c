@@ -6,7 +6,7 @@
 #define ROOM_WIDTH 15
 #define HME_POS 1
 #define BWL_POS (ROOM_WIDTH - 2)
-int CAT_TOWER = 0, SCRATCHER = 0;
+int CAT_TOWER = -1, SCRATCHER = -1;
 
 int Intimacy = 2, soup = 0, yaongPos = HME_POS, prvCatPos = HME_POS;
 int cp = 0, feelings = 3 , lastproduceCP;
@@ -121,9 +121,9 @@ void drewRoom() {
 			printf("H");
 		else if (i == BWL_POS)
 			printf("B");
-		else if (i == CAT_TOWER && CAT_TOWER != 0)
+		else if (i == CAT_TOWER && hasTower)
 			printf("T");
-		else if (i == SCRATCHER && SCRATCHER != 0)
+		else if (i == SCRATCHER && hasScrater)
 			printf("S");
 		else if (i == 0)
 			printf("#");
@@ -247,7 +247,6 @@ void doInteraction() {
 	}
 }
 
-//아 왜 안되 진짜 ㅇㄴ 로ㅓㄴㅇㅁ오ㅕㅑㅐ
 void moveCat() {
 	prvCatPos = yaongPos; // 이전 위치 저장
 
@@ -260,9 +259,9 @@ void moveCat() {
 	else if (feelings == 2) {
 		printf("%s이는 기분 좋게 식빵을 굽고 있습니다.\n", catName);
 	}
-	//아 어렵다
+	
 	else if (feelings == 1) {
-		//여기 기구가 없을 경우 만들기 나중에 
+		//기구가 없을 경우
 		int hasTower = (CAT_TOWER > 0 && CAT_TOWER < ROOM_WIDTH - 1);
 		int hasScratcher = (SCRATCHER > 0 && SCRATCHER < ROOM_WIDTH - 1);
 		if (!hasTower && !hasScratcher) {
@@ -449,8 +448,10 @@ void min_game() {
 	scanf_s("%d", &userInput);
 	if (userInput == answer) {
 		printf("정답입니다! %d x %d = %d\n", num1, num2, answer);
-		feelings++;
-		printf("고양이의 기분이 1 좋아 집니다 %d -> %d", feelings - 1, feelings);
+		if (feelings < 3) {
+			feelings++;
+			printf("고양이의 기분이 1 좋아 집니다 %d -> %d", feelings - 1, feelings);
+		}
 	} else {
 		printf("틀렸습니다. 정답은 %d입니다.\n", answer);
 	}
