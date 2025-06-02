@@ -6,8 +6,7 @@
 #define ROOM_WIDTH 15
 #define HME_POS 1
 #define BWL_POS (ROOM_WIDTH - 2)
-#define CAT_TOWER 5
-#define SCRATCHER 10
+int CAT_TOWER = 0, SCRATCHER = 0;
 
 int Intimacy = 2, soup = 0, yaongPos = HME_POS, prvCatPos = HME_POS;
 int cp = 0, feelings = 3 , lastproduceCP;
@@ -122,9 +121,9 @@ void drewRoom() {
 			printf("H");
 		else if (i == BWL_POS)
 			printf("B");
-		else if (i == CAT_TOWER)
+		else if (i == CAT_TOWER && CAT_TOWER != 0)
 			printf("T");
-		else if (i == SCRATCHER)
+		else if (i == SCRATCHER && SCRATCHER != 0)
 			printf("S");
 		else if (i == 0)
 			printf("#");
@@ -336,78 +335,100 @@ void produce_CP() {
 
 void shop() {
 	int choice;
-	//실행 되는 동안 값이 유지 되도록 해야됨 근데 왜 안되ㅣㅈ
-	//int hasMouse = 0, hasPoiter = 0 , hasScrater = 0, hasTower = 0;
-	printf("상점에서 물건을 살 수 있습니다.\n");
-	printf("어떤 물건을 구매할까요?\n");
-	//printf("보유 CP 포인트 %d\n", cp);
-	printf("0. 아무것도 사지 않는다.\n");
-	printf("1. 장난감 쥐 : 1CP %s\n ",hasMouse ? "(품절)" : "");
-	printf("2. 레이저 포인터: 2CP %s\n",hasPoiter ? "(품절)" : "");
-	printf("3. 스크래처: 4CP %s \n",hasScrater ? "(품절)" : "");
-	printf("4. 캣 타워: 6CP %s\n",hasTower ? "(품절)" : "");
-	printf(">>");
-	scanf_s("%d", &choice);
+	while (1) {
+		//실행 되는 동안 값이 유지 되도록 해야됨 근데 왜 안되ㅣㅈ
+		//int hasMouse = 0, hasPoiter = 0 , hasScrater = 0, hasTower = 0;
+		printf("상점에서 물건을 살 수 있습니다.\n");
+		printf("어떤 물건을 구매할까요?\n");
+		//printf("보유 CP 포인트 %d\n", cp);
+		printf("0. 아무것도 사지 않는다.\n");
+		printf("1. 장난감 쥐 : 1CP %s\n ", hasMouse ? "(품절)" : "");
+		printf("2. 레이저 포인터: 2CP %s\n", hasPoiter ? "(품절)" : "");
+		printf("3. 스크래처: 4CP %s \n", hasScrater ? "(품절)" : "");
+		printf("4. 캣 타워: 6CP %s\n", hasTower ? "(품절)" : "");
+		printf(">>");
+		scanf_s("%d", &choice);
 
-	switch (choice)
-	{
-	case 0:
-		break;
-	case 1:
-		if (hasMouse) {
-			printf("이미 장난감 쥐를 구매하였습니다.\n");
-		}
-		else if (cp < 1) {
-			printf("CP가 부족합니다.\n");
-		}
-		else {
-			cp -= 1;
-			hasMouse = 1;
-			printf("장난감 쥐를 구매함. 남은 CP: %d\n", cp);
-		}
-		break;
-	case 2:
-		if (hasPoiter) {
-			printf("이미 레이저 포인터를 구매하셨습니다.\n");
-		}
-		else if (cp < 2) {
-			printf("CP가 부족합니다.\n");
-		}
-		else {
-			cp -= 2;
-			hasPoiter = 1;
-			printf("레이저 포인터를 구매함.남은 CP : % d\n", cp);
+		if (choice < 0 || choice > 4) {
+			printf("잘못된 입력입니다.\n");
+			continue;
 		}
 
+		switch (choice)
+		{
+		case 0:
+			break;
+		case 1:
+			if (hasMouse) {
+				printf("이미 장난감 쥐를 구매하였습니다.\n");
+			}
+			else if (cp < 1) {
+				printf("CP가 부족합니다.\n");
+			}
+			else {
+				cp -= 1;
+				hasMouse = 1;
+				printf("장난감 쥐를 구매함. 남은 CP: %d\n", cp);
+			}
+			break;
+		case 2:
+			if (hasPoiter) {
+				printf("이미 레이저 포인터를 구매하셨습니다.\n");
+			}
+			else if (cp < 2) {
+				printf("CP가 부족합니다.\n");
+			}
+			else {
+				cp -= 2;
+				hasPoiter = 1;
+				printf("레이저 포인터를 구매함.남은 CP : % d\n", cp);
+			}
+
+			break;
+		case 3:
+			if (hasScrater) {
+				printf("이미 스크래처를 구매하셨습니다.\n");
+			}
+			else if (cp < 4) {
+				printf("CP가 부족합니다.\n");
+			}
+			else {
+				cp -= 4;
+				hasScrater = 1;
+				printf("스크래쳐를 구매함.남은 CP : % d\n", cp);
+				while (1) {
+					int pos = rand() % (ROOM_WIDTH - 2) + 1;
+					if (pos != HME_POS && pos != BWL_POS && pos != CAT_TOWER) {
+						SCRATCHER = pos;
+						break;
+					}
+				}
+			}
+			break;
+		case 4:
+			if (hasTower) {
+				printf("이미 스크래처를 구매하셨습니다.\n");
+			}
+			else if (cp < 6) {
+				printf("CP가 부족합니다.\n");
+			}
+			else {
+				cp -= 6;
+				hasTower = 1;
+				printf("캣타워를 구매함.남은 CP : % d\n", cp);
+				while (1) {
+					int pos = rand() % (ROOM_WIDTH - 2) + 1;
+					if (pos != HME_POS && pos != BWL_POS && pos != SCRATCHER) {
+						CAT_TOWER = pos;
+						break;
+					}
+				}
+			}
+			break;
+		default:
+			printf("잘못된 입력입니다.\n");
+		}
 		break;
-	case 3:
-		if (hasScrater) {
-			printf("이미 스크래처를 구매하셨습니다.\n");
-		}
-		else if (cp < 4) {
-			printf("CP가 부족합니다.\n");
-		}
-		else {
-			cp -= 4;
-			hasScrater = 1;
-			printf("스크래쳐를 구매함.남은 CP : % d\n", cp);
-		}
-		break;
-	case 4:
-		if (hasTower) {
-			printf("이미 스크래처를 구매하셨습니다.\n");
-		}
-		else if (cp < 6) {
-			printf("CP가 부족합니다.\n");
-		}
-		else {
-			cp -= 6;
-			hasTower = 1;
-			printf("캣타워를 구매함.남은 CP : % d\n", cp);
-		}
-		break;
-	default:
-		printf("잘못된 입력입니다.\n");
 	}
 }
 
