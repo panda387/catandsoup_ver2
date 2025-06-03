@@ -3,7 +3,7 @@
 #include <Windows.h>
 #include <time.h>
 
-#define ROOM_WIDTH 15
+#define ROOM_WIDTH 10
 #define HME_POS 1
 #define BWL_POS (ROOM_WIDTH - 2)
 int CAT_TOWER = -1, SCRATCHER = -1;
@@ -315,11 +315,13 @@ void behavior() {
 		if (yaongPos == SCRATCHER) {
 			int prveFeelings = feelings;
 			feelings++;
+			if (feelings > 3) feelings = 3;
 			printf("%s는 스크래쳐를 긁고 놀았습니다. - 기분이 꽤 좋아졌습니다 : %d -> %d\n", catName, prveFeelings, feelings);
 		}
 		else if (yaongPos == CAT_TOWER) {
 			int prveFeelings = feelings;
 			feelings += 2;
+			if (feelings > 3)feelings = 3;
 			printf("%s는 캣타워를 뛰어다닙니다. - 기분이 많이 좋아졌습니다 : %d -> %d\n", catName, prveFeelings, feelings);
 		}
 
