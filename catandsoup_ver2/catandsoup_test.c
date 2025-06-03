@@ -73,7 +73,7 @@ void showState() {
 	printf("=========현재 상태=========\n");
 	printf("현재까지 만든 수프: %d개\n", soup);
 	//cp 포인트
-	printf("%s의 기분과 친밀도에 따라서 CP가 %d 포인트 생산되었습니다.\n", catName, lastproduceCP);
+	printf("%s의 기분과 친밀도에 따라서 지난 턴에 CP가 %d 포인트 생산되었습니다.\n", catName, lastproduceCP);
 	printf("CP: %d 포인트\n",cp);
 	//기분
 	printf("%s이 기분(0 ~ 3): %d\n", catName, feelings);
@@ -181,7 +181,7 @@ void doInteraction() {
 		if (choice == 0) {
 			feelings--;
 			printf("아무것도 하지않습니다.\n");
-			printf("%s의 기분이 나빠졌습니다: %d -> %d",catName,feelings+1,feelings);
+			printf("%s의 기분이 나빠졌습니다: %d -> %d", catName, feelings + 1, feelings);
 			printf("주사위의 눈이 5이하이면 친밀도가 떨어집니다.\n주사위를 굴립니다. 또르륵...\n");
 			int dice = rollDice();
 			printf("%d이(가) 나왔습니다!\n", dice);
@@ -209,9 +209,11 @@ void doInteraction() {
 			}
 			break;
 		}
-		else if(choice == 2){
+		else if (choice == 2 ) {
 			printf("장난감 쥐로 %s와 놀아주었습니다.\n",catName);
+			int prveFeelings = feelings;
 			feelings++;
+			if (feelings < 3) feelings = 3;
 			printf("%s의 기분이 조금 좋아졌습니다 : %d -> %d\n", catName, feelings -1, feelings);
 			printf("주사위의 눈이 4이상이면 친밀도가 올라갑니다.\n주사위를 굴립니다. 또르륵...\n");
 			int dice = rollDice();
@@ -225,10 +227,12 @@ void doInteraction() {
 			}
 			break;
 		}
-		else if (choice == 3) {
+		else if (choice == 3 ) {
 			printf("레이저 포인터로 %s와 놀아주었습니다.\n", catName);
+			int prevFeelings = feelings;
 			feelings += 2;
-			printf("%s의 기분이 꽤 좋아졌습니다 : %d -> %d\n", catName, feelings - 2, feelings);
+			if (feelings > 3) feelings = 3;
+			printf("%s의 기분이 꽤 좋아졌습니다 : %d -> %d\n", catName,prevFeelings, feelings);
 			printf("주사위의 눈이 2이상이면 친밀도가 올라갑니다.\n주사위를 굴립니다. 또르륵...\n");
 			int dice = rollDice();
 			printf("%d이(가) 나왔습니다!\n", dice);
@@ -272,7 +276,9 @@ void moveCat() {
 		int distTower = abs(yaongPos - CAT_TOWER);
 		int distScratcher = abs(yaongPos - SCRATCHER);
 		int target;
-		if (distTower < distScratcher) target = CAT_TOWER; 
+		if (hasTower && !hasScratcher) target = CAT_TOWER;
+		else if (!hasTower && hasScratcher) target = SCRATCHER;
+		else if (distTower < distScratcher) target = CAT_TOWER; 
 		else if (distScratcher < distTower) target = SCRATCHER;
 		else target = (CAT_TOWER < SCRATCHER) ? CAT_TOWER : SCRATCHER; // 둘 다 같으면 더 왼쪽
 
@@ -330,6 +336,11 @@ void produce_CP() {
 	int produceCP = (feelings > 0) ? feelings - 1 + Intimacy : 0;
 	lastproduceCP = produceCP;
 	cp += produceCP;
+
+	printf("%s의 기분(0~3): %d\n", catName, feelings);
+	printf("집사와의 친밀도(0~4) : %d\n", Intimacy);
+	printf("%s의 기분과 친밀도에 따라서 CP가 %d 포인트 생산되었습니다.\n",catName,produceCP);
+	printf("보유 CP: %d 포인트\n\n", cp);
 }
 
 void shop() {
@@ -337,6 +348,7 @@ void shop() {
 	while (1) {
 		//실행 되는 동안 값이 유지 되도록 해야됨 근데 왜 안되ㅣㅈ
 		//int hasMouse = 0, hasPoiter = 0 , hasScrater = 0, hasTower = 0;
+		printf("===============================\n");
 		printf("상점에서 물건을 살 수 있습니다.\n");
 		printf("어떤 물건을 구매할까요?\n");
 		//printf("보유 CP 포인트 %d\n", cp);
@@ -345,6 +357,7 @@ void shop() {
 		printf("2. 레이저 포인터: 2CP %s\n", hasPoiter ? "(품절)" : "");
 		printf("3. 스크래처: 4CP %s \n", hasScrater ? "(품절)" : "");
 		printf("4. 캣 타워: 6CP %s\n", hasTower ? "(품절)" : "");
+		printf("===============================\n");
 		printf(">>");
 		scanf_s("%d", &choice);
 
@@ -406,7 +419,7 @@ void shop() {
 			break;
 		case 4:
 			if (hasTower) {
-				printf("이미 스크래처를 구매하셨습니다.\n");
+				printf("이미 캣타워를 구매하셨습니다.\n");
 			}
 			else if (cp < 6) {
 				printf("CP가 부족합니다.\n");
@@ -414,7 +427,7 @@ void shop() {
 			else {
 				cp -= 6;
 				hasTower = 1;
-				printf("캣타워를 구매함.남은 CP : % d\n", cp);
+				printf("캣타워를 구매함.남은 CP : %d\n", cp);
 				while (1) {
 					int pos = rand() % (ROOM_WIDTH - 2) + 1;
 					if (pos != HME_POS && pos != BWL_POS && pos != SCRATCHER) {
