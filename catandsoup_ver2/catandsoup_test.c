@@ -261,6 +261,7 @@ void moveCat() {
 	// 기분 겁나 좋음
 	if (feelings == 3) {
 		if (yaongPos < BWL_POS) yaongPos++;
+		printf("%s는 골골송을 부르며 수프를 만들러 갑니다.\n", catName);
 	}
 	//그냥 그럴떄
 	else if (feelings == 2) {
@@ -303,14 +304,24 @@ void behavior() {
 	if (yaongPos == HME_POS) {
 		homeStayTurn++;
 		if (homeStayTurn >= 1) {
+			int prveFeelings = feelings;
 			feelings++;
+			printf("%s는 집에 있어 기분이 조금 좋아졌습니다 : %d -> %d\n", catName,prveFeelings,feelings);
 			homeStayTurn = 0;
 		}
 	}
 	else {
 		homeStayTurn = 0;
-		if (yaongPos == SCRATCHER) feelings++;
-		else if (yaongPos == CAT_TOWER) feelings += 2;
+		if (yaongPos == SCRATCHER) {
+			int prveFeelings = feelings;
+			feelings++;
+			printf("%s는 스크래쳐를 긁고 놀았습니다. - 기분이 꽤 좋아졌습니다 : %d -> %d\n", catName, prveFeelings, feelings);
+		}
+		else if (yaongPos == CAT_TOWER) {
+			int prveFeelings = feelings;
+			feelings += 2;
+			printf("%s는 캣타워를 뛰어다닙니다. - 기분이 많이 좋아졌습니다 : %d -> %d\n", catName, prveFeelings, feelings);
+		}
 
 	}
 
