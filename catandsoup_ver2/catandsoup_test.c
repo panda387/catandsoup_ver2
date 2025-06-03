@@ -42,6 +42,7 @@ int main() {
 		Sleep(500);
 		moveCat();
 		Sleep(500);
+		behavior();
 		makeSuop();
 		Sleep(2500);
 		system("cls");
@@ -76,7 +77,7 @@ void showState() {
 	printf("%s의 기분과 친밀도에 따라서 지난 턴에 CP가 %d 포인트 생산되었습니다.\n", catName, lastproduceCP);
 	printf("CP: %d 포인트\n",cp);
 	//기분
-	printf("%s이 기분(0 ~ 3): %d\n", catName, feelings);
+	printf("%s이 기분(0 ~ 3): %d  -  ", catName, feelings);
 	if (feelings == 0) {
 		printf("기분이 매우 나쁩니다.\n");
 	}
@@ -89,7 +90,7 @@ void showState() {
 	else if (feelings == 3) {
 		printf("골골송을 부릅니다.\n");
 	}
-	printf("집사와의 관계(0~4): %d\n", Intimacy);
+	printf("집사와의 관계(0~4): %d  -  ", Intimacy);
 	if (Intimacy == 0) {
 		printf("집사를 혐오합니다.\n");
 	}
@@ -163,8 +164,9 @@ void feel() {
 	printf("주사위를 굴립니다. 또르르...\n");
 	printf("%d가 나왔습니다\n", dice);
 	if (dice < 6 - Intimacy && feelings > 0) {
-		feelings--;
-		printf("%s의 기분이 나빠집니다: %d -> %d\n", catName, feelings + 1, feelings);
+		int prveFeelings = feelings;
+		if (feelings >= 0)feelings--;
+		printf("%s의 기분이 나빠집니다: %d -> %d\n", catName, prveFeelings, feelings);
 	}
 }
 
@@ -179,9 +181,10 @@ void doInteraction() {
 		printf(">>");
 		scanf_s("%d", &choice);
 		if (choice == 0) {
-			feelings--;
+			int prveFeelings = feelings;
+			if(feelings > 0 )	feelings--;
 			printf("아무것도 하지않습니다.\n");
-			printf("%s의 기분이 나빠졌습니다: %d -> %d", catName, feelings + 1, feelings);
+			printf("%s의 기분이 나빠졌습니다: %d -> %d", catName,prveFeelings, feelings);
 			printf("주사위의 눈이 5이하이면 친밀도가 떨어집니다.\n주사위를 굴립니다. 또르륵...\n");
 			int dice = rollDice();
 			printf("%d이(가) 나왔습니다!\n", dice);
@@ -213,8 +216,8 @@ void doInteraction() {
 			printf("장난감 쥐로 %s와 놀아주었습니다.\n",catName);
 			int prveFeelings = feelings;
 			feelings++;
-			if (feelings < 3) feelings = 3;
-			printf("%s의 기분이 조금 좋아졌습니다 : %d -> %d\n", catName, feelings -1, feelings);
+			if (feelings > 3) feelings = 3;
+			printf("%s의 기분이 조금 좋아졌습니다 : %d -> %d\n", catName, prveFeelings, feelings);
 			printf("주사위의 눈이 4이상이면 친밀도가 올라갑니다.\n주사위를 굴립니다. 또르륵...\n");
 			int dice = rollDice();
 			printf("%d이(가) 나왔습니다!\n", dice);
@@ -336,7 +339,8 @@ void produce_CP() {
 	int produceCP = (feelings > 0) ? feelings - 1 + Intimacy : 0;
 	lastproduceCP = produceCP;
 	cp += produceCP;
-
+	if (feelings < 0) feelings = 0;
+	if (feelings > 3) feelings = 3;
 	printf("%s의 기분(0~3): %d\n", catName, feelings);
 	printf("집사와의 친밀도(0~4) : %d\n", Intimacy);
 	printf("%s의 기분과 친밀도에 따라서 CP가 %d 포인트 생산되었습니다.\n",catName,produceCP);
@@ -369,6 +373,7 @@ void shop() {
 		switch (choice)
 		{
 		case 0:
+			printf("아무것도 구매하지 않았습니다.\n");
 			break;
 		case 1:
 			if (hasMouse) {
@@ -393,7 +398,7 @@ void shop() {
 			else {
 				cp -= 2;
 				hasPoiter = 1;
-				printf("레이저 포인터를 구매함.남은 CP : % d\n", cp);
+				printf("레이저 포인터를 구매함.남은 CP : %d\n", cp);
 			}
 
 			break;
@@ -407,8 +412,9 @@ void shop() {
 			else {
 				cp -= 4;
 				hasScrater = 1;
-				printf("스크래쳐를 구매함.남은 CP : % d\n", cp);
-				while (1) {
+				printf("스크래쳐를 구매함.남은 CP : %d\n", cp);
+				int maxtry = 10;
+				while (maxtry--) {
 					int pos = rand() % (ROOM_WIDTH - 2) + 1;
 					if (pos != HME_POS && pos != BWL_POS && pos != CAT_TOWER) {
 						SCRATCHER = pos;
@@ -428,7 +434,9 @@ void shop() {
 				cp -= 6;
 				hasTower = 1;
 				printf("캣타워를 구매함.남은 CP : %d\n", cp);
-				while (1) {
+
+				int maxtry = 10;
+				while (maxtry--) {
 					int pos = rand() % (ROOM_WIDTH - 2) + 1;
 					if (pos != HME_POS && pos != BWL_POS && pos != SCRATCHER) {
 						CAT_TOWER = pos;
@@ -462,8 +470,9 @@ void min_game() {
 	if (userInput == answer) {
 		printf("정답입니다! %d x %d = %d\n", num1, num2, answer);
 		if (feelings < 3) {
+			int prevFeelings = feelings;
 			feelings++;
-			printf("고양이의 기분이 1 좋아 집니다 %d -> %d", feelings - 1, feelings);
+			printf("고양이의 기분이 1 좋아 집니다 %d -> %d", prevFeelings, feelings);
 		}
 	} else {
 		printf("틀렸습니다. 정답은 %d입니다.\n", answer);
