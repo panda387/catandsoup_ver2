@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="catandsoup_test.c">
+    <ClCompile Include="catandsoup_ver2.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

@@ -6,7 +6,7 @@
 #define ROOM_WIDTH 10
 #define HME_POS 1
 #define BWL_POS (ROOM_WIDTH - 2)
-int CAT_TOWER = -1, SCRATCHER = -1;
+int CAT_TOWER = 0, SCRATCHER = 0;
 
 int Intimacy = 2, soup = 0, yaongPos = HME_POS, prvCatPos = HME_POS;
 int cp = 0, feelings = 3 , lastproduceCP;

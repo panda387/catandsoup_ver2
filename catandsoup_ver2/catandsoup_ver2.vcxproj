@@ -24,7 +24,7 @@
     <ProjectGuid>{028d32f8-18d5-439d-b223-41abb5e85ea8}</ProjectGuid>
     <RootNamespace>catandsoupver2</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>catandsoup_tset</ProjectName>
+    <ProjectName>catandsoup_ver2</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -128,7 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="catandsoup_test.c" />
+    <ClCompile Include="catandsoup_ver2.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
